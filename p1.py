@@ -1,40 +1,110 @@
-import numpy as np
-import matplotlib.pyplot as plt
+program 13
+disp('Enter weights');
+w1 = input('Weight w1 = ');
+w2 = input('Weight w2 = ');
 
-def estimate_coef(x, y):
-    n = np.size(x)
+disp('Enter Threshold Value');
+theta = input('theta = ');
 
-    m_x =np.mean(x)
-    m_y = np.mean(y)
+y = [0 0 0 0];
+x1 = [0 0 1 1];
+x2 = [0 1 0 1];
 
-    SS_xy = np.sum(y* x) - n * m_y * m_x
-    SS_xx = np.sum(x* x) - n * m_x * m_x
+% Desired output for ANDNOT function
+z = [0 0 1 0];
 
-    b_1 = SS_xy /SS_xx
-    b_0 = m_y - b_1 * m_x
+con = 1;
+
+while con == 1
     
-    return(b_1, b_0)
+    % Calculate net input
+    zin = x1*w1 + x2*w2;
+    
+    for i = 1:4
+        
+        if zin(i) >= theta
+            y(i) = 1;
+        else
+            y(i) = 0;
+        end
+        
+    end
 
-def plot_regression_line(x , y, b):
-    plt.scatter(x ,y , color='m',marker='o', s=30)
+    disp('Output of Net');
+    disp(y);
 
-    y_pred = b[0] + b[1] * x
-    plt.plot(x , y, color='g')
-    plt.xlabel(x)
-    plt.ylabel(y)
+    % Check whether output matches desired output
+    if isequal(y, z)
+        con = 0;
+    else
+        disp('Net is not learning. Enter another set of weights and Threshold value');
 
-    plt.show()
+        w1 = input('Weight w1 = ');
+        w2 = input('Weight w2 = ');
+        theta = input('theta = ');
+    end
 
-def main():
-     x = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-     y = np.array([1, 3, 2, 5, 7, 8, 8, 9, 10, 12])
+end
 
-     b= estimate_coef(x, y)
-     print("estimate coeff: ")
-     print("b_0 =", b[0])
-     print("b_1= ",b[1])
+disp('McCulloch-Pitts Net for ANDNOT function');
 
-     plot_regression_line(x, y, b)
+disp('Weights of Neuron');
+disp(w1);
+disp(w2);
 
-if __name__ == "__main__":
-    main()
+disp('Threshold value');
+disp(theta);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+program 12
+
+x = -10:0.1:10;
+
+% Logistic Function
+tmp = exp(-x);
+y1 = 1 ./ (1 + tmp);
+
+% Hyperbolic Tangent Function
+y2 = (1 - tmp) ./ (1 + tmp);
+
+% Identity Function
+y3 = x;
+
+% Logistic Function Plot
+subplot(2,3,1);
+plot(x, y1);
+grid on;
+axis([min(x) max(x) -2 2]);
+title('Logistic Function');
+xlabel('(a)');
+axis square;
+
+% Hyperbolic Tangent Function Plot
+subplot(2,3,2);
+plot(x, y2);
+grid on;
+axis([min(x) max(x) -2 2]);
+title('Hyperbolic Tangent Function');
+xlabel('(b)');
+axis square;
+
+% Identity Function Plot
+subplot(2,3,3);
+plot(x, y3);
+grid on;
+axis([min(x) max(x) min(x) max(x)]);
+title('Identity Function');
+xlabel('(c)');
+axis square;
